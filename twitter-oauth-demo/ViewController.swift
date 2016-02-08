@@ -28,7 +28,7 @@ class ViewController: UIViewController {
         TwitterClient.sharedInstance.fetchRequestTokenWithPath(
                 "oauth/request_token",
                 method: "GET",
-                callbackURL: NSURL(string: "cptwitter://oauth"),
+                callbackURL: NSURL(string: "cputwitterdemo://oauth"),
                 scope: nil,
                 success: {
                         (requestToken: BDBOAuth1Credential!) -> Void in
