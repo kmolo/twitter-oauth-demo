@@ -43,6 +43,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     func application(application: UIApplication, openURL url: NSURL, sourceApplication: String?, annotation: AnyObject) -> Bool {
+        
         TwitterClient.sharedInstance.fetchAccessTokenWithPath(
             "oauth/access_token",
             method: "POST",
@@ -70,7 +71,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                         print("home_timeline: \(response!)")
                     },
                     failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
-                        print("error getting current user")
+                        print("error getting home timeline tweets")
                         
                 })
                 
