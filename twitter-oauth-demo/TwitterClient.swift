@@ -53,5 +53,60 @@ class TwitterClient: BDBOAuth1SessionManager {
         }
         
     }
+    
+    func openURL(url: NSURL) {
+        
+        TwitterClient.sharedInstance.fetchAccessTokenWithPath(
+            "oauth/access_token",
+            method: "POST",
+            requestToken: BDBOAuth1Credential(queryString: url.query),
+            success: { (accessToken: BDBOAuth1Credential!) -> Void in
+                print("Got the access token!")
+                
+                TwitterClient.sharedInstance.requestSerializer.saveAccessToken(accessToken)
+                
+                TwitterClient.sharedInstance.GET(
+                    "1.1/account/verify_credentials.json",
+                    parameters: nil,
+                    success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+                        //print("user: \(response!)")
+                        
+                        let user = User(dictionary: response as! NSDictionary)
+                        print("user = \(user.name!)")
+                        
+                        self.loginCompletion?(user: user, error: nil)
+                        
+                    },
+                    failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
+                        print("error getting current user")
+                        self.loginCompletion?(user: nil, error: error)
+                        
+                })
+                
+                TwitterClient.sharedInstance.GET(
+                    "1.1/statuses/home_timeline.json",
+                    parameters: nil,
+                    success: { (operation: NSURLSessionDataTask!, response: AnyObject?) -> Void in
+                        //print("home_timeline: \(response!)")
+                        
+                        let tweets = Tweet.tweetsWithArray(response as! [NSDictionary])
+                        for tweet in tweets {
+                            print("tweet text: \(tweet.text!)")
+                            print("created: \(tweet.createdAtString!)")
+                            print("")
+                        }
+                    },
+                    failure: { (operation: NSURLSessionDataTask?, error: NSError!) -> Void in
+                        print("error getting home timeline tweets")
+                        
+                })
+                
+            },
+            failure: { (error: NSError!) -> Void in
+                print("Failed to receive access token")
+        })
+
+    }
+
 
 }
