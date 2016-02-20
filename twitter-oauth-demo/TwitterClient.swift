@@ -56,7 +56,7 @@ class TwitterClient: BDBOAuth1SessionManager {
     
     func openURL(url: NSURL) {
         
-        TwitterClient.sharedInstance.fetchAccessTokenWithPath(
+        fetchAccessTokenWithPath(
             "oauth/access_token",
             method: "POST",
             requestToken: BDBOAuth1Credential(queryString: url.query),
