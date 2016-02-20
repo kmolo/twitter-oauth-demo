@@ -9,5 +9,9 @@
 import UIKit
 
 class Tweet: NSObject {
-
+    var user: User?
+    var text: String?
+    var createdAtString: String?
+    var createdAt: NSDate?
+    
 }
